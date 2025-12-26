@@ -1,1 +1,1 @@
-import { projectManager, createProject } from "./project.js";
+import { projectManager, Project } from "./project.js";
