@@ -18,7 +18,7 @@ class projectManager {
   }
 
   nextIndex() {
-    return this._projects.length;
+    return this._projects.length + 1;
   }
 
   render() {
@@ -51,7 +51,6 @@ class projectManager {
   renderAddProjectForm() {
     const projectForm = el("form", { class: "add-project" }, [
       el("h2", {}, ["Add Project"]),
-      createField("Project ID", { name: "projectId" }),
       createField("Project Name", { name: "projectName" }),
       el("button", { type: "submit" }, "Submit"),
     ]);
@@ -62,7 +61,7 @@ class projectManager {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      const project = new Project(data["projectId"], data["projectName"]);
+      const project = new Project(this.nextIndex, data["projectName"]);
       this.add(project);
       this.renderProjects();
     });
@@ -82,7 +81,8 @@ class Project {
     const projectNode = el(
       "h3",
       {
-        className: "project-div", id: `id-${this.id}`
+        className: "project-div",
+        id: `project-${this.id}`,
       },
       [`${this.id}. ${this.name}`]
     );
