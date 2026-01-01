@@ -38,3 +38,5 @@ function createField(label, props) {
     el("input", { ...props, id }),
   ]);
 }
+
+export { el, createField };
