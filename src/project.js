@@ -1,4 +1,5 @@
 import { el, createField } from "./utils.js";
+import { Todo } from "./todo.js";
 
 class projectManager {
   constructor() {
@@ -116,12 +117,11 @@ class Project {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      const project = new Project(this.nextIndex(), ...data);
-      this.add(project);
-      this.renderProjects();
+      const task = new Todo(this.nextIndex(), ...data);
+      this.tasks.push(task);
     });
 
-    return taskForm
+    return taskForm;
   }
 }
 
