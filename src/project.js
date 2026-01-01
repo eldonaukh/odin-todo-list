@@ -32,6 +32,15 @@ class projectManager {
 
     return projectsNode;
   }
+
+  renderAddProjectForm() {
+    const projectForm = el("form", { class: "add-project" }, [
+      el("h2", {}, ["Add Project"]),
+      createField("Project ID", { name: "projectId" }),
+      createField("Project Name", { name: "projectName" }),
+      el("button", {type: "submit"}, "Submit")
+    ]);
+  }
 }
 
 class Project {
