@@ -95,6 +95,34 @@ class Project {
     this.name = name;
     this.tasks = [];
   }
+
+  nextIndex() {
+    return this.tasks.length + 1;
+  }
+
+  renderAddTask() {
+    const taskForm = el("form", { class: "add-task" }, [
+      el("h3", {}, [`Add Todo item (${this.name})`]),
+      createField("Title", { name: "taskTitle" }),
+      createField("Description", { name: "taskDesc" }),
+      createField("Due Date", { name: "taskDue", type: "date" }),
+      createField("Priority", { name: "taskPriority", type: "number" }),
+      el("button", { type: "submit" }, "Submit"),
+    ]);
+
+    taskForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const project = new Project(this.nextIndex(), ...data);
+      this.add(project);
+      this.renderProjects();
+    });
+
+    return taskForm
+  }
 }
 
 export { projectManager, Project };
