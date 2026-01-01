@@ -21,6 +21,17 @@ class projectManager {
     return this._projects.length;
   }
 
+  render() {
+    const projectForm = this.renderAddProjectForm();
+    const projectList = this.renderProjects();
+
+    const toAppendChild = document.createDocumentFragment();
+    toAppendChild.appendChild(projectForm);
+    toAppendChild.appendChild(projectList);
+
+    document.body.appendChild(toAppendChild);
+  }
+
   renderProjects() {
     const projectsNode = document.querySelector(".projects-div")
       ? document.querySelector(".projects-div")
