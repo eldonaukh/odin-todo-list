@@ -61,7 +61,7 @@ class projectManager {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      const project = new Project(this.nextIndex, data["projectName"]);
+      const project = new Project(this.nextIndex(), data["projectName"]);
       this.add(project);
       this.renderProjects();
     });
