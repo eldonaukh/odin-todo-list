@@ -95,19 +95,6 @@ class Project {
     this.name = name;
     this.tasks = [];
   }
-
-  renderProject() {
-    const projectNode = el(
-      "h3",
-      {
-        className: "project-div",
-        id: `project-${this.id}`,
-      },
-      [`${this.id}. ${this.name}`]
-    );
-
-    return projectNode;
-  }
 }
 
 export { projectManager, Project };
