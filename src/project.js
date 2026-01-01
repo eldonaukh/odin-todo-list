@@ -36,7 +36,7 @@ class projectManager {
       projectsNode.appendChild(projectNode);
     }
 
-    document.body.appendChild(projectsNode);
+    return projectsNode;
   }
 
   renderAddProjectForm() {
