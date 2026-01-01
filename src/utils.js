@@ -30,3 +30,11 @@ function el(tag, props = {}, children = []) {
 
   return element;
 }
+
+function createField(label, props) {
+  const id = props.id || `id-${label.toLowerCase()}`;
+  return el("div", { class: "form-row" }, [
+    el("label", { for: id, style: { display: "block" }, label }),
+    el("input", { ...props, id }),
+  ]);
+}
