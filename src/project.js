@@ -41,9 +41,7 @@ class projectManager {
     projectsNode.appendChild(el("h2", {}, "Projects"));
 
     for (const project of this._projects) {
-      const projectNode = document.createElement("h3");
-      projectNode.className = "project-div";
-      projectNode.textContent = `${project.id}. ${project.name}`;
+      const projectNode = project.renderProject();
       projectsNode.appendChild(projectNode);
     }
 
@@ -78,6 +76,18 @@ class Project {
     this.id = id;
     this.name = name;
     this.tasks = [];
+  }
+
+  renderProject() {
+    const projectNode = el(
+      "h3",
+      {
+        className: "project-div", id: `id-${this.id}`
+      },
+      [`${this.id}. ${this.name}`]
+    );
+
+    return projectNode;
   }
 }
 
