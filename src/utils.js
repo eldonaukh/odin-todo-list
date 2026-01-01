@@ -17,4 +17,16 @@ function el(tag, props = {}, children = []) {
       }
     }
   }
+
+  const childArray = Array.isArray(children) ? children : [children];
+
+  childArray.forEach((child) => {
+    if (typeof child === "string" || typeof child === "number") {
+      element.appendChild(document.createTextNode(child));
+    } else if (child instanceof HTMLElement) {
+      element.appendChild(child);
+    }
+  });
+
+  return element;
 }
