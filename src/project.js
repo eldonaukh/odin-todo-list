@@ -22,15 +22,21 @@ class projectManager {
   }
 
   renderProjects() {
-    const projectsNode = document.createElement("div");
+    const projectsNode = document.querySelector(".projects-div")
+      ? document.querySelector(".projects-div")
+      : document.createElement("div");
+    projectsNode.className = "projects-div";
+    projectsNode.replaceChildren();
+    projectsNode.appendChild(el("h2", {}, "Projects"));
 
     for (const project of this._projects) {
-      const projectNode = document.createElement("div");
+      const projectNode = document.createElement("h3");
+      projectNode.className = "project-div";
       projectNode.textContent = `${project.id}. ${project.name}`;
-      projectsNode.body.appendChild(projectNode);
+      projectsNode.appendChild(projectNode);
     }
 
-    return projectsNode;
+    document.body.appendChild(projectsNode);
   }
 
   renderAddProjectForm() {
@@ -38,7 +44,7 @@ class projectManager {
       el("h2", {}, ["Add Project"]),
       createField("Project ID", { name: "projectId" }),
       createField("Project Name", { name: "projectName" }),
-      el("button", {type: "submit"}, "Submit")
+      el("button", { type: "submit" }, "Submit"),
     ]);
   }
 }
