@@ -46,6 +46,19 @@ class projectManager {
       createField("Project Name", { name: "projectName" }),
       el("button", { type: "submit" }, "Submit"),
     ]);
+
+    projectForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const project = new Project(data["projectId"], data["projectName"]);
+      this.add(project);
+      this.renderProjects();
+    });
+
+    return projectForm;
   }
 }
 
