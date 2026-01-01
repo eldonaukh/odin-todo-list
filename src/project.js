@@ -9,8 +9,9 @@ class projectManager {
     this._projects.push(project);
   }
 
-  remove(index) {
-    this._projects.splice(index, 1);
+  remove(id) {
+    const rmIndex = this._projects.findIndex((item) => item.id === id);
+    this._projects.splice(rmIndex, 1);
   }
 
   list() {
@@ -41,8 +42,26 @@ class projectManager {
     projectsNode.appendChild(el("h2", {}, "Projects"));
 
     for (const project of this._projects) {
-      const projectNode = project.renderProject();
-      projectsNode.appendChild(projectNode);
+      const projectInfo = el(
+        "h3",
+        {
+          className: "project-div",
+          id: `project-${project.id}`,
+        },
+        [`${this._projects.indexOf(project) + 1}. ${project.name}`]
+      );
+      const rmBtn = el(
+        "button",
+        {
+          onClick: () => {
+            this.remove(project.id);
+            this.renderProjects();
+          },
+        },
+        "Remove"
+      );
+      const projectDiv = el("div", {}, [projectInfo, rmBtn]);
+      projectsNode.appendChild(projectDiv);
     }
 
     return projectsNode;
