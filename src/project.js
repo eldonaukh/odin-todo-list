@@ -110,6 +110,15 @@ class Project {
       createField("Description", { name: "taskDesc" }),
       createField("Due Date", { name: "taskDue", type: "date" }),
       createField("Priority", { name: "taskPriority", type: "number" }),
+      el(
+        "button",
+        {
+          onClick: () => {
+            close();
+          },
+        },
+        "Cancel"
+      ),
       el("button", { type: "submit" }, "Submit"),
     ]);
 
@@ -123,7 +132,7 @@ class Project {
       this.tasks.push(task);
     });
 
-    return taskForm;
+    return el("dialog", {}, taskForm);
   }
 }
 
