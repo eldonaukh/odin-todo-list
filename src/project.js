@@ -3,24 +3,20 @@ import { Todo } from "./todo.js";
 
 class projectManager {
   constructor() {
-    this._projects = [];
+    this.projects = [];
   }
 
   add(project) {
-    this._projects.push(project);
+    this.projects.push(project);
   }
 
   remove(id) {
-    const rmIndex = this._projects.findIndex((item) => item.id === id);
-    this._projects.splice(rmIndex, 1);
-  }
-
-  list() {
-    return this._projects;
+    const rmIndex = this.projects.findIndex((item) => item.id === id);
+    this.projects.splice(rmIndex, 1);
   }
 
   nextIndex() {
-    return this._projects.length + 1;
+    return this.projects.length + 1;
   }
 
   render() {
@@ -42,14 +38,14 @@ class projectManager {
     projectsNode.replaceChildren();
     projectsNode.appendChild(el("h2", {}, "Projects"));
 
-    for (const project of this._projects) {
+    for (const project of this.projects) {
       const projectInfo = el(
         "h3",
         {
           className: "project-div",
           id: `project-${project.id}`,
         },
-        [`${this._projects.indexOf(project) + 1}. ${project.name}`]
+        [`${this.projects.indexOf(project) + 1}. ${project.name}`]
       );
       const rmBtn = el(
         "button",
