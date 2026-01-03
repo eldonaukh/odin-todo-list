@@ -39,25 +39,7 @@ class projectManager {
     projectsNode.appendChild(el("h2", {}, "Projects"));
 
     for (const project of this.projects) {
-      const projectInfo = el(
-        "h3",
-        {
-          className: "project-div",
-          id: `project-${project.id}`,
-        },
-        [`${this.projects.indexOf(project) + 1}. ${project.name}`]
-      );
-      const rmBtn = el(
-        "button",
-        {
-          onClick: () => {
-            this.remove(project.id);
-            this.renderProjects();
-          },
-        },
-        "Remove"
-      );
-      const projectDiv = el("div", {}, [projectInfo, rmBtn]);
+      const projectDiv = project.renderProject();
       projectsNode.appendChild(projectDiv);
     }
 
@@ -77,7 +59,7 @@ class projectManager {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      const project = new Project(this.nextIndex(), data["projectName"]);
+      const project = new Project(this.nextIndex(), data["projectName"], this);
       this.add(project);
       this.renderProjects();
     });
@@ -96,6 +78,29 @@ class Project {
 
   nextIndex() {
     return this.tasks.length + 1;
+  }
+
+  renderProject() {
+    const projectInfo = el(
+      "h3",
+      {
+        className: "project-div",
+        id: `project-${this.id}`,
+      },
+      [`${this.projectManager.projects.indexOf(this) + 1}. ${this.name}`]
+    );
+    const rmBtn = el(
+      "button",
+      {
+        onClick: () => {
+          this.projectManager.remove(this.id);
+          this.projectManager.renderProjects();
+        },
+      },
+      "Remove"
+    );
+
+    return el("div", {}, [projectInfo, rmBtn]);
   }
 
   renderAddTask() {
