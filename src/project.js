@@ -100,39 +100,74 @@ class Project {
       "Remove"
     );
 
-    return el("div", {}, [projectInfo, rmBtn]);
+    const addTaskForm = this.renderAddTask();
+
+    const addTaskBtn = el(
+      "button",
+      {
+        onClick: (e) => {
+          e.preventDefault();
+          const dialog = document.querySelector(`.dialog-addTask`);
+          dialog.show();
+        },
+      },
+      "Add Task"
+    );
+
+    return el("div", {}, [projectInfo, addTaskForm, rmBtn, addTaskBtn]);
   }
 
   renderAddTask() {
+    const cancelBtn = el(
+      "button",
+      {
+        onClick: (e) => {
+          e.preventDefault();
+          const dialog = document.querySelector(`.dialog-addTask`);
+          dialog.close();
+        },
+      },
+      "Cancel"
+    );
+
+    const submitBtn = el(
+      "button",
+      {
+        type: "submit",
+        onClick: (e) => {
+          e.preventDefault();
+
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData.entries());
+
+          const task = new Todo(this.nextIndex(), this, ...data);
+          this.tasks.push(task);
+        },
+      },
+      "Submit"
+    );
+
     const taskForm = el("form", { class: "add-task" }, [
       el("h3", {}, [`Add Todo item (${this.name})`]),
       createField("Title", { name: "taskTitle" }),
       createField("Description", { name: "taskDesc" }),
       createField("Due Date", { name: "taskDue", type: "date" }),
       createField("Priority", { name: "taskPriority", type: "number" }),
-      el(
-        "button",
-        {
-          onClick: () => {
-            close();
-          },
-        },
-        "Cancel"
-      ),
-      el("button", { type: "submit" }, "Submit"),
+      cancelBtn,
+      submitBtn,
     ]);
 
-    taskForm.addEventListener("submit", (e) => {
-      e.preventDefault();
+    // taskForm.addEventListener("submit", (e) => {
+    //   e.preventDefault();
 
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData.entries());
+    //   const formData = new FormData(e.target);
+    //   const data = Object.fromEntries(formData.entries());
 
-      const task = new Todo(this.nextIndex(), this, ...data);
-      this.tasks.push(task);
-    });
+    //   const task = new Todo(this.nextIndex(), this, ...data);
+    //   this.tasks.push(task);
+    // });
 
-    return el("dialog", {}, taskForm);
+    return el("dialog", { class: `dialog-addTask` }, [taskForm]);
   }
 }
 
