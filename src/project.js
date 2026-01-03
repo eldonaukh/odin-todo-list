@@ -87,9 +87,10 @@ class projectManager {
 }
 
 class Project {
-  constructor(id, name) {
+  constructor(id, name, projectManager) {
     this.id = id;
     this.name = name;
+    this.projectManager = projectManager;
     this.tasks = [];
   }
 
