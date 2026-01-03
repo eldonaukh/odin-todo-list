@@ -20,7 +20,7 @@ class projectManager {
   }
 
   render() {
-    const projectForm = this.renderAddProjectForm();
+    const projectForm = this.renderAddProject();
     const projectList = this.renderProjects();
 
     const toAppendChild = document.createDocumentFragment();
@@ -46,7 +46,7 @@ class projectManager {
     return projectsNode;
   }
 
-  renderAddProjectForm() {
+  renderAddProject() {
     const projectForm = el("form", { class: "add-project" }, [
       el("h2", {}, ["Add Project"]),
       createField("Project Name", { name: "projectName" }),
@@ -119,7 +119,7 @@ class Project {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
-      const task = new Todo(this.nextIndex(), ...data);
+      const task = new Todo(this.nextIndex(), this, ...data);
       this.tasks.push(task);
     });
 
