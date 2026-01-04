@@ -23,11 +23,13 @@ class projectManager {
     const projectForm = this.renderAddProject();
     const projectList = this.renderProjects();
 
+    const sidebar = document.querySelector(".sidebar");
+
     const toAppendChild = document.createDocumentFragment();
     toAppendChild.appendChild(projectForm);
     toAppendChild.appendChild(projectList);
 
-    document.body.appendChild(toAppendChild);
+    sidebar.appendChild(toAppendChild);
   }
 
   renderProjects() {
@@ -89,6 +91,7 @@ class Project {
       },
       [`${this.projectManager.projects.indexOf(this) + 1}. ${this.name}`]
     );
+
     const rmBtn = el(
       "button",
       {
@@ -107,14 +110,37 @@ class Project {
       {
         onClick: (e) => {
           e.preventDefault();
-          const dialog = document.querySelector(`.dialog-addTask`);
-          dialog.show();
+          const dialog = document.querySelector(`#dialog-addTask-${this.id}`);
+          dialog.showModal();
         },
       },
       "Add Task"
     );
 
-    return el("div", {}, [projectInfo, addTaskForm, rmBtn, addTaskBtn]);
+    const showTaskBtn = el(
+      "button",
+      {
+        onClick: () => {
+          const main = document.querySelector(".main");
+          main.replaceChildren();
+          const mainTaskDiv = el("div", {}, `Task of Project '${this.name}'`);
+          main.appendChild(mainTaskDiv);
+          for (const task of this.tasks) {
+            const infoSimple = task.renderTodoSimple();
+            main.appendChild(infoSimple);
+          }
+        },
+      },
+      "Show Tasks"
+    );
+
+    return el("div", {}, [
+      projectInfo,
+      addTaskForm,
+      rmBtn,
+      addTaskBtn,
+      showTaskBtn,
+    ]);
   }
 
   renderAddTask() {
@@ -123,7 +149,7 @@ class Project {
       {
         onClick: (e) => {
           e.preventDefault();
-          const dialog = document.querySelector(`.dialog-addTask`);
+          const dialog = document.querySelector(`#dialog-addTask-${this.id}`);
           dialog.close();
         },
       },
@@ -136,26 +162,49 @@ class Project {
         type: "submit",
         onClick: (e) => {
           e.preventDefault();
-
-          const formData = new FormData(e.target);
+          const form = document.querySelector(`#addTask-${this.id}`);
+          const formData = new FormData(form);
           const data = Object.fromEntries(formData.entries());
-
-          const task = new Todo(this.nextIndex(), this, ...data);
+          const task = new Todo(
+            this.nextIndex(),
+            this,
+            data["taskTitle"],
+            data["taskDesc"],
+            data["taskDue"],
+            data["taskPriority"]
+          );
           this.tasks.push(task);
+          const dialog = document.querySelector(`#dialog-addTask-${this.id}`);
+          dialog.close();
         },
       },
       "Submit"
     );
 
-    const taskForm = el("form", { class: "add-task" }, [
-      el("h3", {}, [`Add Todo item (${this.name})`]),
-      createField("Title", { name: "taskTitle" }),
-      createField("Description", { name: "taskDesc" }),
-      createField("Due Date", { name: "taskDue", type: "date" }),
-      createField("Priority", { name: "taskPriority", type: "number" }),
-      cancelBtn,
-      submitBtn,
-    ]);
+    const taskForm = el(
+      "form",
+      { class: "add-task", id: `addTask-${this.id}`, method: "dialog" },
+      [
+        el("h3", {}, [`Add Todo item (${this.name})`]),
+        createField("Title", { name: "taskTitle", value: "demo" }),
+        createField("Description", {
+          name: "taskDesc",
+          value: "demo desc",
+        }),
+        createField("Due Date", {
+          name: "taskDue",
+          type: "date",
+          value: "2026-01-01",
+        }),
+        createField("Priority", {
+          name: "taskPriority",
+          type: "number",
+          value: "1",
+        }),
+        cancelBtn,
+        submitBtn,
+      ]
+    );
 
     // taskForm.addEventListener("submit", (e) => {
     //   e.preventDefault();
@@ -167,7 +216,7 @@ class Project {
     //   this.tasks.push(task);
     // });
 
-    return el("dialog", { class: `dialog-addTask` }, [taskForm]);
+    return el("dialog", { id: `dialog-addTask-${this.id}` }, [taskForm]);
   }
 }
 
