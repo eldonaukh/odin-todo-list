@@ -5,18 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Odin Todo</title>
     <style>
-      .content {
+      body {
         display: flex;
+        flex-direction: column;
         margin: 0 auto;
         width: 1000px;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 20px;
+      }
+
+      .sidebar {
+        padding-right: 20px;
       }
     </style>
   </head>
   <body>
+    <h1>TOP - Todo List</h1>
     <div class="content">
-      <div class="sidebar">
-        <h1>TOP - Todo List</h1>
-      </div>
+      <div class="sidebar"></div>
       <div class="main"></div>
     </div>
 
