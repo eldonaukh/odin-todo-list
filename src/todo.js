@@ -13,30 +13,35 @@ class Todo {
 
   renderTodoSimple() {
     const task = this.project.tasks[this.id - 1];
+
+    const taskTitle = el(
+      "h4",
+      { id: `task-${this.id}` },
+      `${this.project.tasks.indexOf(this) + 1}. ${this.title}`
+    );
+
     const completedBox = createField("", {
       type: "checkbox",
       onClick: (e) => {
         if (e.target.checked === true) {
           task.completed = true;
+          taskTitle.style.textDecoration = "line-through";
         } else {
           task.completed = false;
+          taskTitle.style.textDecoration = "";
         }
       },
     });
 
-    completedBox.querySelector("input").checked = task.completed;
+    if (task.completed) {
+      completedBox.querySelector("input").checked = true;
+      taskTitle.style.textDecoration = "line-through";
+    }
 
     const infoDIv = el(
       "div",
       { style: { display: "flex", alignItems: "center" } },
-      [
-        completedBox,
-        el(
-          "h4",
-          { id: `task-${this.id}` },
-          `${this.project.tasks.indexOf(this) + 1}. ${this.title}`
-        ),
-      ]
+      [completedBox, taskTitle]
     );
     return infoDIv;
   }
