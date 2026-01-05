@@ -120,16 +120,7 @@ class Project {
     const showTaskBtn = el(
       "button",
       {
-        onClick: () => {
-          const main = document.querySelector(".main");
-          main.replaceChildren();
-          const mainTaskDiv = el("div", {}, `Task of Project '${this.name}'`);
-          main.appendChild(mainTaskDiv);
-          for (const task of this.tasks) {
-            const infoSimple = task.renderTodoSimple();
-            main.appendChild(infoSimple);
-          }
-        },
+        onClick: () => this.renderTasks(),
       },
       "Show Tasks"
     );
@@ -141,6 +132,17 @@ class Project {
       addTaskBtn,
       showTaskBtn,
     ]);
+  }
+
+  renderTasks() {
+    const main = document.querySelector(".main");
+    main.replaceChildren();
+    const mainTaskDiv = el("div", {}, `Task of Project '${this.name}'`);
+    main.appendChild(mainTaskDiv);
+    for (const task of this.tasks) {
+      const infoSimple = task.renderTodoSimple();
+      main.appendChild(infoSimple);
+    }
   }
 
   renderAddTask() {
@@ -174,6 +176,7 @@ class Project {
             data["taskPriority"]
           );
           this.tasks.push(task);
+          this.renderTasks();
           const dialog = document.querySelector(`#dialog-addTask-${this.id}`);
           dialog.close();
         },
@@ -205,16 +208,6 @@ class Project {
         submitBtn,
       ]
     );
-
-    // taskForm.addEventListener("submit", (e) => {
-    //   e.preventDefault();
-
-    //   const formData = new FormData(e.target);
-    //   const data = Object.fromEntries(formData.entries());
-
-    //   const task = new Todo(this.nextIndex(), this, ...data);
-    //   this.tasks.push(task);
-    // });
 
     return el("dialog", { id: `dialog-addTask-${this.id}` }, [taskForm]);
   }
