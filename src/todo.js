@@ -16,7 +16,25 @@ class Todo {
 
     const taskTitle = el(
       "h4",
-      { id: `task-${this.id}` },
+      {
+        id: `task-${this.id}`,
+        onClick: (e) => {
+          if (e.target !== e.currentTarget) {
+            return;
+          }
+          const details = this.renderTodoDetails();
+          console.log(e.target);
+          console.log(e.target.parentNode);
+          // e.target.replaceChildren();
+          if (e.target.expanded === undefined || e.target.expanded === false) {
+            e.target.expanded = true;
+            e.target.appendChild(details);
+          } else {
+            e.target.expanded = false;
+            e.target.removeChild(e.target.lastChild);
+          }
+        },
+      },
       `${this.project.tasks.indexOf(this) + 1}. ${this.title}`
     );
 
@@ -38,12 +56,18 @@ class Todo {
       taskTitle.style.textDecoration = "line-through";
     }
 
-    const infoDIv = el(
-      "div",
-      { style: { display: "flex", alignItems: "center" } },
-      [completedBox, taskTitle]
-    );
-    return infoDIv;
+    return el("div", { style: { display: "flex", alignItems: "center" } }, [
+      completedBox,
+      taskTitle,
+    ]);
+  }
+
+  renderTodoDetails() {
+    const desc = el("p", {}, `${this.desc}`);
+    const dueDate = el("p", {}, `Due Date: ${this.dueDate}`);
+    const priority = el("p", {}, `Priority: ${this.priority}`);
+
+    return el("div", {}, [desc, dueDate, priority]);
   }
 }
 
