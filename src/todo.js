@@ -1,4 +1,4 @@
-import { el } from "./utils.js";
+import { el, createField } from "./utils.js";
 
 class Todo {
   constructor(id, project, title, desc, dueDate, priority) {
@@ -12,9 +12,32 @@ class Todo {
   }
 
   renderTodoSimple() {
-    const infoDIv = el("div", {}, [
-      el("h4", {}, `${this.project.tasks.indexOf(this) + 1}. ${this.title}`),
-    ]);
+    const task = this.project.tasks[this.id - 1];
+    const completedBox = createField("", {
+      type: "checkbox",
+      onClick: (e) => {
+        if (e.target.checked === true) {
+          task.completed = true;
+        } else {
+          task.completed = false;
+        }
+      },
+    });
+
+    completedBox.querySelector("input").checked = task.completed;
+
+    const infoDIv = el(
+      "div",
+      { style: { display: "flex", alignItems: "center" } },
+      [
+        completedBox,
+        el(
+          "h4",
+          { id: `task-${this.id}` },
+          `${this.project.tasks.indexOf(this) + 1}. ${this.title}`
+        ),
+      ]
+    );
     return infoDIv;
   }
 }
