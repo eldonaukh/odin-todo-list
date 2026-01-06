@@ -51,7 +51,7 @@ class projectManager {
   renderAddProject() {
     const projectForm = el("form", { class: "add-project" }, [
       el("h2", {}, ["Add Project"]),
-      createField("Project Name", { name: "projectName" }),
+      createField("Project Name", { name: "projectName", required: true }),
       el("button", { type: "submit" }, "Submit"),
     ]);
 
@@ -60,10 +60,15 @@ class projectManager {
 
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-
-      const project = new Project(this.nextIndex(), data["projectName"], this);
-      this.add(project);
-      this.renderProjects();
+      if (data["projectName"] !== "") {
+        const project = new Project(
+          this.nextIndex(),
+          data["projectName"],
+          this
+        );
+        this.add(project);
+        this.renderProjects();
+      }
     });
 
     return projectForm;
@@ -137,7 +142,7 @@ class Project {
   renderTasks() {
     const main = document.querySelector(".main");
     main.replaceChildren();
-    const mainTaskDiv = el("div", {}, `Task of Project '${this.name}'`);
+    const mainTaskDiv = el("h2", {}, `Task of Project '${this.name}'`);
     main.appendChild(mainTaskDiv);
     for (const task of this.tasks) {
       const infoSimple = task.renderTodoSimple();
