@@ -1,4 +1,4 @@
-import { el, createField } from "./utils.js";
+import { el, createField, createSelect } from "./utils.js";
 
 class Todo {
   constructor(id, project, title, desc, dueDate, priority) {
@@ -14,6 +14,15 @@ class Todo {
   remove(id) {
     const rmIndex = this.project.tasks.findIndex((item) => item.id === id);
     this.project.tasks.splice(rmIndex, 1);
+  }
+
+  edit(id, data) {
+    const task = this.project.tasks[this.id - 1];
+
+    task.title = data["taskTitle"];
+    task.desc = data["taskDesc"];
+    task.dueDate = data["taskDue"];
+    task.priority = data["taskPriority"];
   }
 
   renderTodoSimple() {
@@ -73,19 +82,103 @@ class Todo {
       "Remove"
     );
 
+    const editTaskForm = this.renderEditTask();
+
+    const editTaskBtn = el(
+      "button",
+      {
+        onClick: (e) => {
+          e.preventDefault();
+          const dialog = document.querySelector(`#dialog-editTask-${this.id}`);
+          dialog.showModal();
+        },
+      },
+      "Edit"
+    );
+
     return el("div", { style: { backgroundColor: this.getPriorityColor() } }, [
       completedBox,
       taskTitle,
+      editTaskForm,
       rmBtn,
+      editTaskBtn,
     ]);
+  }
+
+  renderEditTask() {
+    const cancelBtn = el(
+      "button",
+      {
+        onClick: (e) => {
+          e.preventDefault();
+          const dialog = document.querySelector(`#dialog-editTask-${this.id}`);
+          dialog.close();
+        },
+      },
+      "Cancel"
+    );
+
+    const submitBtn = el(
+      "button",
+      {
+        type: "submit",
+        onClick: (e) => {
+          e.preventDefault();
+          const form = document.querySelector(`#editTask-${this.id}`);
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+          this.edit(this.id, data);
+          this.project.renderTasks();
+          const dialog = document.querySelector(`#dialog-editTask-${this.id}`);
+          dialog.close();
+        },
+      },
+      "Submit"
+    );
+
+    const priorityOptions = [
+      el("option", { value: "h" }, "High"),
+      el("option", { value: "m" }, "Mid"),
+      el("option", { value: "l" }, "Low"),
+    ];
+
+    const taskForm = el(
+      "form",
+      { class: "edit-task", id: `editTask-${this.id}`, method: "dialog" },
+      [
+        el("h3", {}, [`Edit Todo item`]),
+        createField("Title", { name: "taskTitle", value: this.title }),
+        createField("Description", {
+          name: "taskDesc",
+          value: this.desc,
+        }),
+        createField("Due Date", {
+          name: "taskDue",
+          type: "date",
+          value: this.dueDate,
+        }),
+        createSelect(
+          "Priority",
+          {
+            name: "taskPriority",
+            value: this.priority,
+          },
+          priorityOptions
+        ),
+        cancelBtn,
+        submitBtn,
+      ]
+    );
+
+    return el("dialog", { id: `dialog-editTask-${this.id}` }, [taskForm]);
   }
 
   renderTodoDetails() {
     const desc = el("div", {}, `Description: ${this.desc}`);
     const dueDate = el("div", {}, `Due Date: ${this.dueDate}`);
-    const priority = el("div", {}, `Priority: ${this.priority}`);
+    // const priority = el("div", {}, `Priority: ${this.priority}`);
 
-    return el("div", {}, [desc, dueDate, priority]);
+    return el("div", {}, [desc, dueDate]);
   }
 
   getPriorityColor() {
