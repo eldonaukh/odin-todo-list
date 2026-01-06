@@ -1,4 +1,4 @@
-import { el, createField } from "./utils.js";
+import { el, createField, createSelect } from "./utils.js";
 import { Todo } from "./todo.js";
 
 class projectManager {
@@ -189,6 +189,8 @@ class Project {
       "Submit"
     );
 
+    const priorityOptions = [el("option", {value: "h"}, "High"), el("option", {value: "m"}, "Mid"), el("option", {value: "l"}, "Low")]
+
     const taskForm = el(
       "form",
       { class: "add-task", id: `addTask-${this.id}`, method: "dialog" },
@@ -204,11 +206,10 @@ class Project {
           type: "date",
           value: "2026-01-01",
         }),
-        createField("Priority", {
+        createSelect("Priority", {
           name: "taskPriority",
-          type: "number",
-          value: "1",
-        }),
+          value: "h",
+        }, priorityOptions),
         cancelBtn,
         submitBtn,
       ]
