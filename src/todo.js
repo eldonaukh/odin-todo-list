@@ -15,9 +15,10 @@ class Todo {
     const task = this.project.tasks[this.id - 1];
 
     const taskTitle = el(
-      "h4",
+      "span",
       {
         id: `task-${this.id}`,
+        style: { fontWeight: "bold", fontSize: "20px" },
         onClick: (e) => {
           if (e.target !== e.currentTarget) {
             return;
@@ -28,17 +29,17 @@ class Todo {
           // e.target.replaceChildren();
           if (e.target.expanded === undefined || e.target.expanded === false) {
             e.target.expanded = true;
-            e.target.appendChild(details);
+            e.target.parentNode.appendChild(details);
           } else {
             e.target.expanded = false;
-            e.target.removeChild(e.target.lastChild);
+            e.target.parentNode.removeChild(e.target.parentNode.lastChild);
           }
         },
       },
       `${this.project.tasks.indexOf(this) + 1}. ${this.title}`
     );
 
-    const completedBox = createField("", {
+    const completedBox = el("input", {
       type: "checkbox",
       onClick: (e) => {
         if (e.target.checked === true) {
@@ -56,18 +57,27 @@ class Todo {
       taskTitle.style.textDecoration = "line-through";
     }
 
-    return el("div", { style: { display: "flex", alignItems: "center" } }, [
+    return el("div", { style: { backgroundColor: this.getPriorityColor() } }, [
       completedBox,
       taskTitle,
     ]);
   }
 
   renderTodoDetails() {
-    const desc = el("p", {}, `${this.desc}`);
-    const dueDate = el("p", {}, `Due Date: ${this.dueDate}`);
-    const priority = el("p", {}, `Priority: ${this.priority}`);
+    const desc = el("div", {}, `Description: ${this.desc}`);
+    const dueDate = el("div", {}, `Due Date: ${this.dueDate}`);
+    const priority = el("div", {}, `Priority: ${this.priority}`);
 
     return el("div", {}, [desc, dueDate, priority]);
+  }
+
+  getPriorityColor() {
+    const colors = {
+      h: "lightpink",
+      m: "lightsalmon",
+      l: "lightgreen",
+    };
+    return colors[this.priority];
   }
 }
 
