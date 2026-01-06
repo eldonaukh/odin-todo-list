@@ -11,6 +11,11 @@ class Todo {
     this.project = project;
   }
 
+  remove(id) {
+    const rmIndex = this.project.tasks.findIndex((item) => item.id === id);
+    this.project.tasks.splice(rmIndex, 1);
+  }
+
   renderTodoSimple() {
     const task = this.project.tasks[this.id - 1];
 
@@ -57,9 +62,21 @@ class Todo {
       taskTitle.style.textDecoration = "line-through";
     }
 
+    const rmBtn = el(
+      "button",
+      {
+        onClick: () => {
+          this.remove(this.id);
+          this.project.renderTasks();
+        },
+      },
+      "Remove"
+    );
+
     return el("div", { style: { backgroundColor: this.getPriorityColor() } }, [
       completedBox,
       taskTitle,
+      rmBtn,
     ]);
   }
 
