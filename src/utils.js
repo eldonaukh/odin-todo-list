@@ -39,4 +39,12 @@ function createField(label, props) {
   ]);
 }
 
-export { el, createField };
+function createSelect(label, props, options) {
+  const id = props.id || `id-${label.toLowerCase()}`;
+  return el("div", { class: "form-row" }, [
+    el("label", { for: id, style: { display: "block" } }, label),
+    el("select", { ...props, id }, options),
+  ]);
+}
+
+export { el, createField, createSelect };
