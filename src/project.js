@@ -6,6 +6,41 @@ class projectManager {
     this.projects = [];
   }
 
+  static fromJSON(jsonData) {
+    const data = JSON.parse(jsonData);
+    const pm = new projectManager();
+    for (const project of data.projects) {
+      const p = new Project(project.id, project.name, pm);
+
+      for (const task of project.tasks) {
+        const t = new Todo(
+          task.id,
+          p,
+          task.title,
+          task.desc,
+          task.dueDate,
+          task.priority,
+          task.completed
+        );
+        p.tasks.push(t);
+      }
+
+      pm.projects.push(p);
+    }
+
+    return pm
+  }
+
+  toJSON() {
+    const projectManager = {};
+    projectManager.projects = [];
+    for (const project of this.projects) {
+      projectManager.projects.push(project.toObject());
+    }
+
+    return JSON.stringify(projectManager);
+  }
+
   add(project) {
     this.projects.push(project);
   }
@@ -83,6 +118,18 @@ class Project {
     this.tasks = [];
   }
 
+  toObject() {
+    const project = {};
+
+    project.id = this.id;
+    project.name = this.name;
+    project.tasks = [];
+    for (const task of this.tasks) {
+      project.tasks.push(task.toObject());
+    }
+    return project;
+  }
+
   nextIndex() {
     return this.tasks.length + 1;
   }
@@ -147,6 +194,7 @@ class Project {
     for (const task of this.tasks) {
       const infoSimple = task.renderTodoSimple();
       main.appendChild(infoSimple);
+      console.log(task.project.projectManager.toObject());
     }
   }
 
@@ -189,7 +237,11 @@ class Project {
       "Submit"
     );
 
-    const priorityOptions = [el("option", {value: "h"}, "High"), el("option", {value: "m"}, "Mid"), el("option", {value: "l"}, "Low")]
+    const priorityOptions = [
+      el("option", { value: "h" }, "High"),
+      el("option", { value: "m" }, "Mid"),
+      el("option", { value: "l" }, "Low"),
+    ];
 
     const taskForm = el(
       "form",
@@ -206,10 +258,14 @@ class Project {
           type: "date",
           value: "2026-01-01",
         }),
-        createSelect("Priority", {
-          name: "taskPriority",
-          value: "h",
-        }, priorityOptions),
+        createSelect(
+          "Priority",
+          {
+            name: "taskPriority",
+            value: "h",
+          },
+          priorityOptions
+        ),
         cancelBtn,
         submitBtn,
       ]
