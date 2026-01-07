@@ -1,14 +1,25 @@
 import { el, createField, createSelect } from "./utils.js";
 
 class Todo {
-  constructor(id, project, title, desc, dueDate, priority) {
+  constructor(id, project, title, desc, dueDate, priority, completed = false) {
     this.id = id;
     this.title = title;
     this.desc = desc;
     this.dueDate = dueDate;
     this.priority = priority;
-    this.completed = false;
+    this.completed = completed;
     this.project = project;
+  }
+
+  toObject() {
+    const task = {};
+
+    for (const key of Object.keys(this)) {
+      if (key !== "project") {
+        task[key] = this[key];
+      }
+    }
+    return task;
   }
 
   remove(id) {
