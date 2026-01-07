@@ -28,7 +28,12 @@ class projectManager {
       pm.projects.push(p);
     }
 
-    return pm
+    return pm;
+  }
+
+  toLocalStorage() {
+    const json = this.toJSON();
+    localStorage.setItem("todoData", json);
   }
 
   toJSON() {
@@ -103,6 +108,7 @@ class projectManager {
         );
         this.add(project);
         this.renderProjects();
+        this.toLocalStorage()
       }
     });
 
@@ -150,6 +156,7 @@ class Project {
         onClick: () => {
           this.projectManager.remove(this.id);
           this.projectManager.renderProjects();
+          this.projectManager.toLocalStorage();
         },
       },
       "Remove"
@@ -194,7 +201,6 @@ class Project {
     for (const task of this.tasks) {
       const infoSimple = task.renderTodoSimple();
       main.appendChild(infoSimple);
-      console.log(task.project.projectManager.toObject());
     }
   }
 
@@ -232,6 +238,7 @@ class Project {
           this.renderTasks();
           const dialog = document.querySelector(`#dialog-addTask-${this.id}`);
           dialog.close();
+          this.projectManager.toLocalStorage();
         },
       },
       "Submit"

@@ -1,5 +1,12 @@
 import { projectManager, Project } from "./project.js";
 
-const projects = new projectManager()
+const data = localStorage.getItem("todoData");
 
-projects.render()
+if (data) {
+  const projects = projectManager.fromJSON(data);
+  projects.render();
+} else {
+  const projects = new projectManager();
+  projects.render();
+}
+

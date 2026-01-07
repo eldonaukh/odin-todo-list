@@ -70,9 +70,11 @@ class Todo {
         if (e.target.checked === true) {
           task.completed = true;
           taskTitle.style.textDecoration = "line-through";
+          this.project.projectManager.toLocalStorage();
         } else {
           task.completed = false;
           taskTitle.style.textDecoration = "";
+          this.project.projectManager.toLocalStorage();
         }
       },
     });
@@ -88,6 +90,7 @@ class Todo {
         onClick: () => {
           this.remove(this.id);
           this.project.renderTasks();
+          this.project.projectManager.toLocalStorage();
         },
       },
       "Remove"
@@ -142,6 +145,7 @@ class Todo {
           this.project.renderTasks();
           const dialog = document.querySelector(`#dialog-editTask-${this.id}`);
           dialog.close();
+          this.project.projectManager.toLocalStorage();
         },
       },
       "Submit"
